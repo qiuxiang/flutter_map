@@ -518,16 +518,11 @@ abstract class MapGestureMixin extends State<FlutterMap>
       return;
     }
 
-    var direction = details.velocity.pixelsPerSecond / magnitude;
-    var distance = (Offset.zero &
-            Size(mapState.originalSize!.x as double,
-                mapState.originalSize!.y as double))
-        .shortestSide;
-
+    var direction = details.velocity.pixelsPerSecond;
     var _flingOffset = _focalStartLocal - _lastFocalLocal;
     _flingAnimation = Tween<Offset>(
       begin: _flingOffset,
-      end: _flingOffset - direction * distance,
+      end: _flingOffset - direction / 2,
     ).animate(_flingController);
 
     _flingController
@@ -539,6 +534,7 @@ abstract class MapGestureMixin extends State<FlutterMap>
             stiffness: 1000.0,
             ratio: 5.0,
           ));
+
   }
 
   void handleTap(TapPosition position) {
