@@ -66,6 +66,7 @@ abstract class MapGestureMixin extends State<FlutterMap>
   var _pinchMoveStarted = false;
   var _dragStarted = false;
   var _flingAnimationStarted = false;
+  var _lastZoomTime = DateTime.now();
 
   // Helps to reset ScaleUpdateDetails.scale back to 1.0 when a multi finger
   // gesture wins
@@ -473,6 +474,15 @@ abstract class MapGestureMixin extends State<FlutterMap>
 
     if (!options.allowPanning) {
       return;
+    }
+
+    if (DateTime.now().difference(_lastZoomTime) <
+        Duration(milliseconds: 300)) {
+      return;
+    }
+
+    if (_pinchZoomStarted) {
+      _lastZoomTime = DateTime.now();
     }
 
     final eventSource =
